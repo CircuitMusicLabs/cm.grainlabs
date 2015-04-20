@@ -169,7 +169,7 @@
 				C74_SYM_LINKER_FLAGS = "@$(C74SUPPORT)/max-includes/c74_linker_flags.txt";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				DSTROOT = "$(SRCROOT)/sdk-build/externals";
+				DSTROOT = "$(SRCROOT)/../sdk-build/externals";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/max6-sdk/c74support/msp-includes\"",
@@ -200,7 +200,7 @@
 				C74_SYM_LINKER_FLAGS = "@$(C74SUPPORT)/max-includes/c74_linker_flags.txt";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
-				DSTROOT = "$(SRCROOT)/sdk-build/externals";
+				DSTROOT = "$(SRCROOT)/../sdk-build/externals";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/max6-sdk/c74support/msp-includes\"",
