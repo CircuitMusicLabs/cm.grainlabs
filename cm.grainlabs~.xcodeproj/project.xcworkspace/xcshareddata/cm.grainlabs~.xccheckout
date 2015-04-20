@@ -22,7 +22,7 @@
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>43DDD4A1012A81E5C2F5DA96FCA0DABF5263B8FC</key>
-		<string>../../max6-sdk/</string>
+		<string>../../max6-sdk</string>
 		<key>5B0DC03F3D0C19FF05E58F4569F75C8A1F6AF645</key>
 		<string>../../cm.library</string>
 		<key>E2658BE88E373AEE5EF2866235B2D1D0D017EB8C</key>
