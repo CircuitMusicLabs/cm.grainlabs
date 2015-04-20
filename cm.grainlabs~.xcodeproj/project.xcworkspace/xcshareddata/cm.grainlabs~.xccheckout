@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>08695F43-D0F5-4758-8477-26C3A840B589</string>
+	<key>IDESourceControlProjectName</key>
+	<string>cm.grainlabs~</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>C45AB3D6B530DC3A1C9400A2347964F2D674ABFF</key>
+		<string>github.com:CircuitMusicLabs/cm.grainlabs.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>cm.grainlabs~.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>C45AB3D6B530DC3A1C9400A2347964F2D674ABFF</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:CircuitMusicLabs/cm.grainlabs.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>C45AB3D6B530DC3A1C9400A2347964F2D674ABFF</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C45AB3D6B530DC3A1C9400A2347964F2D674ABFF</string>
+			<key>IDESourceControlWCCName</key>
+			<string>cm.grainlabs~</string>
+		</dict>
+	</array>
+</dict>
+</plist>
