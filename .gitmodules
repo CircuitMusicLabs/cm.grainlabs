@@ -1,3 +1,6 @@
 [submodule "max6-sdk"]
 	path = max6-sdk
 	url = https://github.com/Cycling74/max6-sdk
+[submodule "cm.library"]
+	path = cm.library
+	url = https://github.com/CircuitMusicLabs/cm.library
