@@ -11,15 +11,16 @@
 		834BB30E19C227C100E135AE /* cm.grainlabs~.c in Sources */ = {isa = PBXBuildFile; fileRef = 834BB30D19C227C100E135AE /* cm.grainlabs~.c */; };
 		83D034781A03FA3C0050D3EF /* cmstereo_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 83D034761A03FA3C0050D3EF /* cmstereo_functions.c */; };
 		83D034791A03FA3C0050D3EF /* cmutil_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 83D034771A03FA3C0050D3EF /* cmutil_functions.c */; };
+		9BC096A21AE584DE00642F11 /* maxmspsdk.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9BC096A11AE584DE00642F11 /* maxmspsdk.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		22CF10220EE984600054F513 /* maxmspsdk.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = maxmspsdk.xcconfig; path = ../../maxmspsdk.xcconfig; sourceTree = SOURCE_ROOT; };
-		22CF116D0EE9A7700054F513 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
+		22CF116D0EE9A7700054F513 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "max6-sdk/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		2FBBEAE508F335360078DB84 /* cm.grainlabs~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cm.grainlabs~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		834BB30D19C227C100E135AE /* cm.grainlabs~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "cm.grainlabs~.c"; sourceTree = "<group>"; };
-		83D034761A03FA3C0050D3EF /* cmstereo_functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cmstereo_functions.c; path = cmlibrary/cmstereo_functions.c; sourceTree = "<group>"; };
-		83D034771A03FA3C0050D3EF /* cmutil_functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cmutil_functions.c; path = cmlibrary/cmutil_functions.c; sourceTree = "<group>"; };
+		83D034761A03FA3C0050D3EF /* cmstereo_functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cmstereo_functions.c; path = cm.library/cmstereo_functions.c; sourceTree = "<group>"; };
+		83D034771A03FA3C0050D3EF /* cmutil_functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cmutil_functions.c; path = cm.library/cmutil_functions.c; sourceTree = "<group>"; };
+		9BC096A11AE584DE00642F11 /* maxmspsdk.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = maxmspsdk.xcconfig; path = "max6-sdk/examples/maxmspsdk.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +38,7 @@
 		089C166AFE841209C02AAC07 /* iterator */ = {
 			isa = PBXGroup;
 			children = (
-				22CF10220EE984600054F513 /* maxmspsdk.xcconfig */,
+				9BC096A11AE584DE00642F11 /* maxmspsdk.xcconfig */,
 				834BB30D19C227C100E135AE /* cm.grainlabs~.c */,
 				83D034761A03FA3C0050D3EF /* cmstereo_functions.c */,
 				83D034771A03FA3C0050D3EF /* cmutil_functions.c */,
@@ -116,6 +117,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BC096A21AE584DE00642F11 /* maxmspsdk.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,47 +150,75 @@
 		2FBBEAD008F335010078DB84 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../cmlibrary";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/cm.library";
 			};
 			name = Development;
 		};
 		2FBBEAD108F335010078DB84 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../cmlibrary";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/cm.library";
 			};
 			name = Deployment;
 		};
 		2FBBEAE108F335360078DB84 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 22CF10220EE984600054F513 /* maxmspsdk.xcconfig */;
+			baseConfigurationReference = 9BC096A11AE584DE00642F11 /* maxmspsdk.xcconfig */;
 			buildSettings = {
+				C74SUPPORT = "$(SRCROOT)/max6-sdk/c74support";
+				C74_SYM_LINKER_FLAGS = "@$(C74SUPPORT)/max-includes/c74_linker_flags.txt";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DSTROOT = "$(SRCROOT)/sdk-build/externals";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../c74support/msp-includes\"",
+					"\"$(SRCROOT)/max6-sdk/c74support/msp-includes\"",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = "$(C74SUPPORT)/max-includes/macho-prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"$(C74SUPPORT)/max-includes\"",
+					"\"$(C74SUPPORT)/msp-includes\"",
+					"\"$(C74SUPPORT)/jit-includes\"",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/max6-sdk/examples/Info.plist";
+				INSTALL_PATH = /;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
 				PRODUCT_NAME = "cm.grainlabs~";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/cmlibrary";
+				PRODUCT_VERSION = 6.1.4;
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/cm.library";
+				WRAPPER_EXTENSION = mxo;
 			};
 			name = Development;
 		};
 		2FBBEAE208F335360078DB84 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 22CF10220EE984600054F513 /* maxmspsdk.xcconfig */;
+			baseConfigurationReference = 9BC096A11AE584DE00642F11 /* maxmspsdk.xcconfig */;
 			buildSettings = {
+				C74SUPPORT = "$(SRCROOT)/max6-sdk/c74support";
+				C74_SYM_LINKER_FLAGS = "@$(C74SUPPORT)/max-includes/c74_linker_flags.txt";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
+				DSTROOT = "$(SRCROOT)/sdk-build/externals";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../c74support/msp-includes\"",
+					"\"$(SRCROOT)/max6-sdk/c74support/msp-includes\"",
 				);
+				GCC_PREFIX_HEADER = "$(C74SUPPORT)/max-includes/macho-prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"$(C74SUPPORT)/max-includes\"",
+					"\"$(C74SUPPORT)/msp-includes\"",
+					"\"$(C74SUPPORT)/jit-includes\"",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/max6-sdk/examples/Info.plist";
+				INSTALL_PATH = /;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
 				PRODUCT_NAME = "cm.grainlabs~";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/cmlibrary";
+				PRODUCT_VERSION = 6.1.4;
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/cm.library";
+				WRAPPER_EXTENSION = mxo;
 			};
 			name = Deployment;
 		};
