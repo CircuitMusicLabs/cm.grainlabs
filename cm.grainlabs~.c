@@ -282,7 +282,7 @@ void cmgrainlabs_dsp64(t_cmgrainlabs *x, t_object *dsp64, short *count, double s
 	if (x->m_sr != samplerate * 0.001) { // check if sample rate stored in object structure is the same as the current project sample rate
 		x->m_sr = samplerate * 0.001;
 	}
-	//object_post((t_object *)x, "dsp method called");
+	
 	// CALL THE PERFORM ROUTINE
 	//object_method(dsp64, gensym("dsp_add64"), x, cmgrainlabs_perform64, 0, NULL);
 	dsp_add64(dsp64, (t_object*)x, (t_perfroutine64)cmgrainlabs_perform64, 0, NULL);
