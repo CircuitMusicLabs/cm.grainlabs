@@ -27,5 +27,8 @@ If you do not have Git installed, you can [download this ZIP archive](https://gi
 
 After you downloaded the entire repository, open the included Xcode project and compile the external. A compiled and complete Max package including all documentation and relevant auxiliary files will be added to this repository very soon.
 
+##Compatibility
+Externals are currently only compiled for the 64 bit Mac OS X version of [Max](https://cycling74.com) version 6 or 7. If you would like to help with Windows and/or backwards compatibility, please don't hesitate contact me or to fork the repository. Compatibility issues are also listed in [the Issues section](https://github.com/CircuitMusicLabs/cm.grainlabs/issues) of this GitHub project site.
+
 ##Bug reporting
 If you feel that you have found a bug, please report it via [the Issues section](https://github.com/CircuitMusicLabs/cm.grainlabs/issues) of this GitHub project site.
