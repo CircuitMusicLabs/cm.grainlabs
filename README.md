@@ -10,7 +10,7 @@ Available controls are the following and consist of an upper and lower range, fr
 * grain pitch
 * pan
 
-###System Requirements for compiled externals:
+###System Requirements for Compiled Externals
 * Mac OS 10.9.5 or above
 * Max 6.1.8 or above (compatible with Max 7)
 * Max running in 64 bit mode
