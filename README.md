@@ -23,7 +23,9 @@ If you have [Git](http://git-scm.com/) installed, you can install via the Termin
 	cd cm.grainlabs~
 	git clone https://github.com/CircuitMusicLabs/cm.grainlabs
 
-Open the included Xcode project and compile the external. A compiled external and all included package files will be added to this repository very soon.
+If you do not have Git installed, you can [download this ZIP archive](https://github.com/CircuitMusicLabs/cm.grainlabs/archive/master.zip). It contains the latest changes from the master branch.
+
+After you downloaded the entire repository, open the included Xcode project and compile the external. A compiled and complete Max package including all documentation and relevant auxiliary files will be added to this repository very soon.
 
 ##Bug reporting
 If you feel that you have found a bug, please report it via [the Issues section](https://github.com/CircuitMusicLabs/cm.grainlabs/issues) of this GitHub project site.
