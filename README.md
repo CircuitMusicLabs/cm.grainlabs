@@ -1,5 +1,5 @@
 #cm.grainlabs~
-**by Matthias Müller - [@mwmueller](https://twitter.com/mwmueller) - [cmlabs.wordpress.com](https://cmlabs.wordpress.com/)**
+**by Matthias W. Müller - [@mwmueller](https://twitter.com/mwmueller) - [cmlabs.wordpress.com](https://cmlabs.wordpress.com/)**
 
 ##About
 cm.grainlabs~ is an external audio object for [Cycling 74's Max](https://cycling74.com), used for polyphonic granulation of pre-recorded sounds. It is loosely based on [Curtis Roads’ asynchronous granular synthesis](http://www.granularsynthesis.com/hthesis/sync.html). It can granulate both mono and stereo audio files loaded into the sample buffer~ object. When a stereo file is loaded into the sample buffer~ object and the ‘stereo’ attribute is activated, cm.grainlabs~ will generate a grain from both channels and send each channel to the respective output.
