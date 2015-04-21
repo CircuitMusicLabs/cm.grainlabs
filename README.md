@@ -2,7 +2,7 @@
 **by Matthias W. Müller - [@mwmueller](https://twitter.com/mwmueller) - [cmlabs.wordpress.com](https://cmlabs.wordpress.com/)**
 
 ##About
-cm.grainlabs~ is an external audio object for [Cycling 74's Max](https://cycling74.com), used for polyphonic granulation of pre-recorded sounds. It is loosely based on [Curtis Roads’ asynchronous granular synthesis](http://www.granularsynthesis.com/hthesis/sync.html). It granulates both single- dual-channel audio files loaded into a buffer~ object. cm.grainlabs~ makes use of a second buffer~ object for the windowing function applied to each grain.
+cm.grainlabs~ is an external audio object for [Cycling 74's Max](https://cycling74.com), used for polyphonic granulation of pre-recorded sounds. It is loosely based on Curtis Roads’ asynchronous granular synthesis (see Curtis Roads' book [Microsound](http://mitpress.mit.edu/books/microsound) for more information). It granulates both single- dual-channel audio files loaded into a buffer~ object. cm.grainlabs~ makes use of a second buffer~ object for the windowing function applied to each grain.
 
 Available controls are the following and consist of an upper and lower range, from within which a random value is generated for each grain:
 * start position within the selected sample buffer~ object
