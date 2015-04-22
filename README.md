@@ -28,10 +28,10 @@ If you do not have Git installed, you can [download this ZIP archive](https://gi
 After you downloaded the entire repository, open the included Xcode project and compile the external with via Product > Build (Command-B).
 
 ###Installing the Max Package
-Installation instructions Max 6
+####Installation instructions Max 6:
 * Copy the entire cm.grainlabs~ folder either into the "packages" folder in your Max installation or into "Max/Packages" in your ~/Documents folder.
 
-Installation instructions Max 7
+####Installation instructions Max 7:
 * Copy the entire cm.grainlabs~ folder into “Max 7/Packages" in your ~/Documents folder.
 
 ###Compatibility
