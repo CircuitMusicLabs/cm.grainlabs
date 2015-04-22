@@ -28,10 +28,10 @@ If you do not have Git installed, you can [download this ZIP archive](https://gi
 After you downloaded the entire repository, open the included Xcode project and compile the external with via Product > Build (Command-B).
 
 ###Installing the Max Package (Max 6)
-Copy the entire cm.grainlabs~ folder inside the 'max-package' directory either into the "packages" folder in your Max installation or into "Max/Packages" in your ~/Documents folder.
+Copy the entire cm.grainlabs~ folder inside the "max-package" directory either into the "packages" folder in your Max installation or into "Max/Packages" in your ~/Documents folder.
 
 ###Installing the Max Package (Max 7)
-Copy the entire cm.grainlabs~ folder inside the 'max-package' directory into “Max 7/Packages" in your ~/Documents folder.
+Copy the entire cm.grainlabs~ folder inside the "max-package" directory into “Max 7/Packages" in your ~/Documents folder.
 
 ###Compatibility
 Externals are currently only compiled for the 64 bit Mac OS X version of [Max](https://cycling74.com) version 6 or 7. If you would like to help with Windows and/or backwards compatibility, please don't hesitate to contact me or to fork the repository. Compatibility issues are also listed in [the Issues section](https://github.com/CircuitMusicLabs/cm.grainlabs/issues) of this GitHub project site.
