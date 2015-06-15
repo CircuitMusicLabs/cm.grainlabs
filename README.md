@@ -34,7 +34,7 @@ Copy the entire cm.grainlabs~ folder inside the "max-package" directory either i
 Copy the entire cm.grainlabs~ folder inside the "max-package" directory into “Max 7/Packages" in your ~/Documents folder.
 
 ###Compatibility
-Externals are currently only compiled for the 64 bit Mac OS X version of [Max](https://cycling74.com) version 6 or 7. If you would like to help with Windows and/or backwards compatibility, please don't hesitate to contact me or to fork the repository. Compatibility issues are also listed in [the Issues section](https://github.com/CircuitMusicLabs/cm.grainlabs/issues) of this GitHub project site.
+The source code for cm.grainlabs~ can currently only be compiled for the 64 bit Mac OS X version of [Max](https://cycling74.com) version 6 or 7. User [alfonso73](https://github.com/alfonso73) has successfully compiled for Windows and kindly offered the Windows compatible externals for download. The Max package is included in this repository. Compatibility issues are also listed in [the Issues section](https://github.com/CircuitMusicLabs/cm.grainlabs/issues) of this GitHub project site.
 
 ###Bug reporting
 If you feel that you have found a bug, please report it via [the Issues section](https://github.com/CircuitMusicLabs/cm.grainlabs/issues) of this GitHub project site.
