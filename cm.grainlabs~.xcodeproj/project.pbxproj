@@ -11,7 +11,6 @@
 		834BB30E19C227C100E135AE /* cm.grainlabs~.c in Sources */ = {isa = PBXBuildFile; fileRef = 834BB30D19C227C100E135AE /* cm.grainlabs~.c */; };
 		83D034781A03FA3C0050D3EF /* cmstereo_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 83D034761A03FA3C0050D3EF /* cmstereo_functions.c */; };
 		83D034791A03FA3C0050D3EF /* cmutil_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 83D034771A03FA3C0050D3EF /* cmutil_functions.c */; };
-		9BC096A21AE584DE00642F11 /* maxmspsdk.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9BC096A11AE584DE00642F11 /* maxmspsdk.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,7 +93,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0640;
 			};
 			buildConfigurationList = 2FBBEACF08F335010078DB84 /* Build configuration list for PBXProject "cm.grainlabs~" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -117,7 +116,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9BC096A21AE584DE00642F11 /* maxmspsdk.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
