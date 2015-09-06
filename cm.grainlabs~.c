@@ -725,10 +725,10 @@ t_max_err cmgrainlabs_notify(t_cmgrainlabs *x, t_symbol *s, t_symbol *msg, void 
 	if (msg == ps_buffer_modified) {
 		x->buffer_modified = 1;
 	}
-	if (buffer_name == x->window_name) { // check if calling object was the sample buffer
+	if (buffer_name == x->window_name) { // check if calling object was the window buffer
 		return buffer_ref_notify(x->w_buffer, s, msg, sender, data); // return with the calling buffer
 	}
-	else { // check if calling object was the window buffer
+	else { // check if calling object was the sample buffer
 		return buffer_ref_notify(x->buffer, s, msg, sender, data); // return with the calling buffer
 	}
 }
