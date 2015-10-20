@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "E2658BE88E373AEE5EF2866235B2D1D0D017EB8C",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "E2658BE88E373AEE5EF2866235B2D1D0D017EB8C" : 0,
+    "43DDD4A1012A81E5C2F5DA96FCA0DABF5263B8FC" : 0,
+    "5B0DC03F3D0C19FF05E58F4569F75C8A1F6AF645" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "08695F43-D0F5-4758-8477-26C3A840B589",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "E2658BE88E373AEE5EF2866235B2D1D0D017EB8C" : "cm.grainlabs~",
+    "43DDD4A1012A81E5C2F5DA96FCA0DABF5263B8FC" : "cm.grainlabs~\/max6-sdk",
+    "5B0DC03F3D0C19FF05E58F4569F75C8A1F6AF645" : "cm.grainlabs~\/cm.library"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "cm.grainlabs~",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "cm.grainlabs~.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Cycling74\/max6-sdk",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "43DDD4A1012A81E5C2F5DA96FCA0DABF5263B8FC"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CircuitMusicLabs\/cm.library",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5B0DC03F3D0C19FF05E58F4569F75C8A1F6AF645"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:CircuitMusicLabs\/cm.grainlabs.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E2658BE88E373AEE5EF2866235B2D1D0D017EB8C"
+    }
+  ]
+}
