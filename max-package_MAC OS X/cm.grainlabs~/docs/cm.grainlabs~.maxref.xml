@@ -101,6 +101,22 @@
 				Maximum pan value
 			</description>
 		</inlet>
+		<inlet id="9" type="INLET_TYPE">
+			<digest>
+				min gain
+			</digest>
+			<description>
+				Minimum gain value
+			</description>
+		</inlet>
+		<inlet id="10" type="INLET_TYPE">
+			<digest>
+				max gain
+			</digest>
+			<description>
+				Maximum gain value
+			</description>
+		</inlet>
 	</inletlist>
 	<!--OUTLETS-->
 	<outletlist>
