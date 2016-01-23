@@ -33,6 +33,7 @@
 #define MAX_GRAINLENGTH 300 // max grain length in ms
 #define MIN_GRAINLENGTH 1 // min grain length in ms
 #define MAX_PITCH 10 // max pitch
+#define MAX_GAIN 2.0 // max gain
 #define ARGUMENTS 3 // constant number of arguments required for the external
 #define MAXGRAINS 128 // maximum number of simultaneously playing grains
 
@@ -55,7 +56,9 @@ typedef struct _cmgrainlabs {
 	double pitchmax_float; // used to store the max pitch value received from float inlet
 	double panmin_float; // used to store the min pan value received from the float inlet
 	double panmax_float; // used to store the max pan value received from the float inlet
-	short connect_status[8]; // array for signal inlet connection statuses
+    double gainmin_float;
+    double gainmax_float;
+	short connect_status[10]; // array for signal inlet connection statuses
 	short *busy; // array used to store the flag if a grain is currently playing or not
 	long *grainpos; // used to store the current playback position per grain
 	long *start; // used to store the start position in the buffer for each grain
@@ -63,6 +66,7 @@ typedef struct _cmgrainlabs {
 	long *gr_length; // current grain length after pitch adjustment
 	double *pan_left; // pan information for left channel for each grain
 	double *pan_right; // pan information for right channel for each grain
+    double *gain; // gain information for each grain
 	double tr_prev; // trigger sample from previous signal vector (required to check if input ramp resets to zero)
 	short grains_limit; // user defined maximum number of grains
 	short grains_limit_old; // used to store the previous grains count limit when user changes the limit via the "limit" message
@@ -159,7 +163,7 @@ int C74_EXPORT main(void) {
 /************************************************************************************************************************/
 void *cmgrainlabs_new(t_symbol *s, long argc, t_atom *argv) {
 	t_cmgrainlabs *x = (t_cmgrainlabs *)object_alloc(cmgrainlabs_class); // create the object and allocate required memory
-	dsp_setup((t_pxobject *)x, 9); // create 9 inlets
+	dsp_setup((t_pxobject *)x, 11); // create 9 inlets
 	
 	if (argc < ARGUMENTS) {
 		object_error((t_object *)x, "%d arguments required (sample/window/voices)", ARGUMENTS);
@@ -240,6 +244,13 @@ void *cmgrainlabs_new(t_symbol *s, long argc, t_atom *argv) {
 		object_error((t_object *)x, "out of memory");
 		return NULL;
 	}
+    
+    // ALLOCATE MEMORY FOR THE GAIN ARRAY
+    x->gain = (double *)sysmem_newptrclear((MAXGRAINS) * sizeof(double *));
+    if (x->gain == NULL) {
+        object_error((t_object *)x, "out of memory");
+        return NULL;
+    }
 		
 	/************************************************************************************************************************/
 	// INITIALIZE VALUES
@@ -251,6 +262,8 @@ void *cmgrainlabs_new(t_symbol *s, long argc, t_atom *argv) {
 	x->pitchmax_float = 1.0; // initialize inlet value for min pitch
 	x->panmin_float = 0.0; // initialize value for min pan
 	x->panmax_float = 0.0; // initialize value for max pan
+    x->gainmin_float = 1.0;
+    x->gainmax_float = 1.0;
 	x->tr_prev = 0.0; // initialize value for previous trigger sample
 	x->grains_count = 0; // initialize the grains count value
 	x->grains_limit_old = 0; // initialize value for the routine when grains limit was modified
@@ -278,6 +291,8 @@ void cmgrainlabs_dsp64(t_cmgrainlabs *x, t_object *dsp64, short *count, double s
 	x->connect_status[5] = count[6]; // 7th inlet: write connection flag into object structure (1 if signal connected)
 	x->connect_status[6] = count[7]; // 8th inlet: write connection flag into object structure (1 if signal connected)
 	x->connect_status[7] = count[8]; // 9th inlet: write connection flag into object structure (1 if signal connected)
+    x->connect_status[8] = count[9]; // 10th inlet: write connection flag into object structure (1 if signal connected)
+    x->connect_status[9] = count[10]; // 11th inlet: write connection flag into object structure (1 if signal connected)
 	
 	if (x->m_sr != samplerate * 0.001) { // check if sample rate stored in object structure is the same as the current project sample rate
 		x->m_sr = samplerate * 0.001;
@@ -299,7 +314,7 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 	long n = sampleframes; // number of samples per signal vector
 	double tr_curr; // current trigger value
 	double pan; // temporary random pan information
-	double pitch; // temporary pitch for new grains
+    double pitch; // temporary pitch for new grains
 	double distance; // floating point index for reading from buffers
 	long index; // truncated index for reading from buffers
 	double w_read, b_read; // current sample read from the window buffer
@@ -345,7 +360,9 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 	t_double pitchmin 	= x->connect_status[4]? *ins[5] : x->pitchmin_float; // get pitch min input signal from 6th inlet
 	t_double pitchmax 	= x->connect_status[5]? *ins[6] : x->pitchmax_float; // get pitch max input signal from 7th inlet
 	t_double panmin 	= x->connect_status[6]? *ins[7] : x->panmin_float; // get min pan input signal from 8th inlet
-	t_double panmax 	= x->connect_status[7]? *ins[8] : x->panmax_float; // get max pan input signal from 8th inlet
+	t_double panmax 	= x->connect_status[7]? *ins[8] : x->panmax_float; // get max pan input signal from 9th inlet
+    t_double gainmin 	= x->connect_status[8]? *ins[9] : x->gainmin_float; // get min gain input signal from 10th inlet
+    t_double gainmax 	= x->connect_status[9]? *ins[10] : x->gainmax_float; // get max gain input signal from 10th inlet
 	
 	// DSP LOOP
 	while (n--) {
@@ -440,6 +457,21 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 			if (pitch > MAX_PITCH) {
 				pitch = MAX_PITCH;
 			}
+            /************************************************************************************************************************/
+            // GET RANDOM GAIN
+            if (gainmin != gainmax) {
+                x->gain[slot] = cm_random(&gainmin, &gainmax);
+            }
+            else {
+                x->gain[slot] = gainmin;
+            }
+            // CHECK IF THE GAIN VALUE IS LEGAL
+            if (x->gain[slot] < 0.0) {
+                x->gain[slot] = 0.0;
+            }
+            if (x->gain[slot] > MAX_GAIN) {
+                x->gain[slot] = MAX_GAIN;
+            }
 			/************************************************************************************************************************/
 			// CALCULATE THE ACTUAL GRAIN LENGTH (SAMPLES) ACCORDING TO PITCH
 			x->gr_length[slot] = x->t_length[slot] * pitch;
@@ -504,12 +536,12 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 					else {
 						if (x->attr_sinterp) {
 							b_read = cm_lininterp(distance, b_sample, b_channelcount, 0) * w_read; // get interpolated sample
-							outsample_left += b_read * x->pan_left[i];
-							outsample_right += b_read * x->pan_right[i];
+							outsample_left += (b_read * x->pan_left[i]) * x->gain[i];
+							outsample_right += (b_read * x->pan_right[i]) * x->gain[i];
 						}
 						else {
-							outsample_left += (b_sample[(long)distance * b_channelcount] * w_read) * x->pan_left[i];
-							outsample_right += (b_sample[(long)distance * b_channelcount] * w_read) * x->pan_right[i];
+							outsample_left += ((b_sample[(long)distance * b_channelcount] * w_read) * x->pan_left[i]) * x->gain[i];
+							outsample_right += ((b_sample[(long)distance * b_channelcount] * w_read) * x->pan_right[i]) * x->gain[i];
 						}
 					}
 					if (x->grainpos[i] == x->t_length[i]) { // if current grain has reached the end position
@@ -586,6 +618,12 @@ void cmgrainlabs_assist(t_cmgrainlabs *x, void *b, long msg, long arg, char *dst
 			case 8:
 				snprintf_zero(dst, 256, "(signal/float) pan max");
 				break;
+            case 9:
+                snprintf_zero(dst, 256, "(signal/float) gain min");
+                break;
+            case 10:
+                snprintf_zero(dst, 256, "(signal/float) gain max");
+                break;
 		}
 	}
 	else if (msg == ASSIST_OUTLET) {
@@ -619,6 +657,7 @@ void cmgrainlabs_free(t_cmgrainlabs *x) {
 	sysmem_freeptr(x->gr_length); // free memory allocated to the t_length array
 	sysmem_freeptr(x->pan_left); // free memory allocated to the pan_left array
 	sysmem_freeptr(x->pan_right); // free memory allocated to the pan_right array
+    sysmem_freeptr(x->gain); // free memory allocated to the gain array
 }
 
 /************************************************************************************************************************/
@@ -704,6 +743,22 @@ void cmgrainlabs_float(t_cmgrainlabs *x, double f) {
 				x->panmax_float = f;
 			}
 			break;
+        case 9:
+            if (f < 0.0 || f > MAX_GAIN) {
+                dump = f;
+            }
+            else {
+                x->gainmax_float = f;
+            }
+            break;
+        case 10:
+            if (f < 0.0 || f > MAX_GAIN) {
+                dump = f;
+            }
+            else {
+                x->gainmin_float = f;
+            }
+            break;
 	}
 }
 
