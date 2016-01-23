@@ -33,7 +33,7 @@
 #define MAX_GRAINLENGTH 300 // max grain length in ms
 #define MIN_GRAINLENGTH 1 // min grain length in ms
 #define MAX_PITCH 10 // max pitch
-#define MAX_GAIN 2.0 // max gain
+#define MAX_GAIN 2.0
 #define ARGUMENTS 3 // constant number of arguments required for the external
 #define MAXGRAINS 128 // maximum number of simultaneously playing grains
 
@@ -56,8 +56,8 @@ typedef struct _cmgrainlabs {
 	double pitchmax_float; // used to store the max pitch value received from float inlet
 	double panmin_float; // used to store the min pan value received from the float inlet
 	double panmax_float; // used to store the max pan value received from the float inlet
-    double gainmin_float;
-    double gainmax_float;
+    double gainmin_float; // used to store the min gain value received from the float inlet
+    double gainmax_float; // used to store the max gain value received from the float inlet
 	short connect_status[10]; // array for signal inlet connection statuses
 	short *busy; // array used to store the flag if a grain is currently playing or not
 	long *grainpos; // used to store the current playback position per grain
@@ -525,12 +525,12 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 					
 					if (b_channelcount > 1 && x->attr_stereo) { // if more than one channel
 						if (x->attr_sinterp) {
-							outsample_left += (cm_lininterp(distance, b_sample, b_channelcount, 0) * w_read) * x->pan_left[i]; // get interpolated sample
-							outsample_right += (cm_lininterp(distance, b_sample, b_channelcount, 1) * w_read) * x->pan_right[i];
+							outsample_left += ((cm_lininterp(distance, b_sample, b_channelcount, 0) * w_read) * x->pan_left[i]) * x->gain[i]; // get interpolated sample
+							outsample_right += ((cm_lininterp(distance, b_sample, b_channelcount, 1) * w_read) * x->pan_right[i]) * x->gain[i];
 						}
 						else {
-							outsample_left += (b_sample[(long)distance * b_channelcount] * w_read) * x->pan_left[i];
-							outsample_right += (b_sample[((long)distance * b_channelcount) + 1] * w_read) * x->pan_right[i];
+							outsample_left += ((b_sample[(long)distance * b_channelcount] * w_read) * x->pan_left[i]) * x->gain[i];
+							outsample_right += ((b_sample[((long)distance * b_channelcount) + 1] * w_read) * x->pan_right[i]) * x->gain[i];
 						}
 					}
 					else {
@@ -748,7 +748,7 @@ void cmgrainlabs_float(t_cmgrainlabs *x, double f) {
                 dump = f;
             }
             else {
-                x->gainmax_float = f;
+                x->gainmin_float = f;
             }
             break;
         case 10:
@@ -756,7 +756,7 @@ void cmgrainlabs_float(t_cmgrainlabs *x, double f) {
                 dump = f;
             }
             else {
-                x->gainmin_float = f;
+                x->gainmax_float = f;
             }
             break;
 	}
