@@ -718,7 +718,7 @@ void cmgrainlabs_dblclick(t_cmgrainlabs *x) {
 
 
 /************************************************************************************************************************/
-/* NOTIFY METHOD FOR THE BUFFER REFERENCEs                                                                              */
+/* NOTIFY METHOD FOR THE BUFFER REFERENCES                                                                              */
 /************************************************************************************************************************/
 t_max_err cmgrainlabs_notify(t_cmgrainlabs *x, t_symbol *s, t_symbol *msg, void *sender, void *data) {
 	t_symbol *buffer_name = (t_symbol *)object_method((t_object *)sender, gensym("getname"));
@@ -728,8 +728,11 @@ t_max_err cmgrainlabs_notify(t_cmgrainlabs *x, t_symbol *s, t_symbol *msg, void 
 	if (buffer_name == x->window_name) { // check if calling object was the window buffer
 		return buffer_ref_notify(x->w_buffer, s, msg, sender, data); // return with the calling buffer
 	}
-	else { // check if calling object was the sample buffer
+	else if (buffer_name == x->buffer_name) { // check if calling object was the sample buffer
 		return buffer_ref_notify(x->buffer, s, msg, sender, data); // return with the calling buffer
+	}
+	else { // if calling object was none of the expected buffers
+		return MAX_ERR_NONE; // return generic MAX_ERR_NONE
 	}
 }
 
