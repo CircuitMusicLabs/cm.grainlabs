@@ -7,19 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		22CF116E0EE9A7700054F513 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22CF116D0EE9A7700054F513 /* MaxAudioAPI.framework */; };
+		39068FAA1C541B940076DFC3 /* maxmspsdk.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 39068FA91C541B940076DFC3 /* maxmspsdk.xcconfig */; settings = {ASSET_TAGS = (); }; };
+		39068FAC1C541BCC0076DFC3 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39068FAB1C541BCC0076DFC3 /* MaxAudioAPI.framework */; settings = {ASSET_TAGS = (); }; };
 		834BB30E19C227C100E135AE /* cm.grainlabs~.c in Sources */ = {isa = PBXBuildFile; fileRef = 834BB30D19C227C100E135AE /* cm.grainlabs~.c */; };
 		83D034781A03FA3C0050D3EF /* cmstereo_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 83D034761A03FA3C0050D3EF /* cmstereo_functions.c */; };
 		83D034791A03FA3C0050D3EF /* cmutil_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 83D034771A03FA3C0050D3EF /* cmutil_functions.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		22CF116D0EE9A7700054F513 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "max6-sdk/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		2FBBEAE508F335360078DB84 /* cm.grainlabs~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cm.grainlabs~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		39068FA91C541B940076DFC3 /* maxmspsdk.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = maxmspsdk.xcconfig; path = "max-sdk/source/maxmspsdk.xcconfig"; sourceTree = "<group>"; };
+		39068FAB1C541BCC0076DFC3 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "max-sdk/source/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 		834BB30D19C227C100E135AE /* cm.grainlabs~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "cm.grainlabs~.c"; sourceTree = "<group>"; };
 		83D034761A03FA3C0050D3EF /* cmstereo_functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cmstereo_functions.c; path = cm.library/cmstereo_functions.c; sourceTree = "<group>"; };
 		83D034771A03FA3C0050D3EF /* cmutil_functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cmutil_functions.c; path = cm.library/cmutil_functions.c; sourceTree = "<group>"; };
-		9BC096A11AE584DE00642F11 /* maxmspsdk.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = maxmspsdk.xcconfig; path = "max6-sdk/examples/maxmspsdk.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,7 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22CF116E0EE9A7700054F513 /* MaxAudioAPI.framework in Frameworks */,
+				39068FAC1C541BCC0076DFC3 /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -37,11 +38,11 @@
 		089C166AFE841209C02AAC07 /* iterator */ = {
 			isa = PBXGroup;
 			children = (
-				9BC096A11AE584DE00642F11 /* maxmspsdk.xcconfig */,
+				39068FA91C541B940076DFC3 /* maxmspsdk.xcconfig */,
 				834BB30D19C227C100E135AE /* cm.grainlabs~.c */,
 				83D034761A03FA3C0050D3EF /* cmstereo_functions.c */,
 				83D034771A03FA3C0050D3EF /* cmutil_functions.c */,
-				22CF116D0EE9A7700054F513 /* MaxAudioAPI.framework */,
+				39068FAB1C541BCC0076DFC3 /* MaxAudioAPI.framework */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
 			name = iterator;
@@ -116,6 +117,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39068FAA1C541B940076DFC3 /* maxmspsdk.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +151,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ENABLE_TESTABILITY = YES;
+				INFOPLIST_FILE = "";
 				ONLY_ACTIVE_ARCH = YES;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/cm.library";
 			};
@@ -157,22 +160,23 @@
 		2FBBEAD108F335010078DB84 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				INFOPLIST_FILE = "";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/cm.library";
 			};
 			name = Deployment;
 		};
 		2FBBEAE108F335360078DB84 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9BC096A11AE584DE00642F11 /* maxmspsdk.xcconfig */;
 			buildSettings = {
-				C74SUPPORT = "$(SRCROOT)/max6-sdk/c74support";
+				C74SUPPORT = "$(SRCROOT)/max-sdk/source/c74support";
 				C74_SYM_LINKER_FLAGS = "@$(C74SUPPORT)/max-includes/c74_linker_flags.txt";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = "$(SRCROOT)/../sdk-build/externals";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/max-sdk/source/c74support/msp-includes\"",
+					"$(PROJECT_DIR)/max-sdk/source/c74support/msp-includes",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "$(C74SUPPORT)/max-includes/macho-prefix.pch";
@@ -181,7 +185,7 @@
 					"\"$(C74SUPPORT)/msp-includes\"",
 					"\"$(C74SUPPORT)/jit-includes\"",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/max6-sdk/examples/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/max-sdk/source/Info.plist";
 				INSTALL_PATH = /;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
@@ -195,16 +199,16 @@
 		};
 		2FBBEAE208F335360078DB84 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9BC096A11AE584DE00642F11 /* maxmspsdk.xcconfig */;
 			buildSettings = {
-				C74SUPPORT = "$(SRCROOT)/max6-sdk/c74support";
+				C74SUPPORT = "$(SRCROOT)/max-sdk/source/c74support";
 				C74_SYM_LINKER_FLAGS = "@$(C74SUPPORT)/max-includes/c74_linker_flags.txt";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = "$(SRCROOT)/../sdk-build/externals";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/max-sdk/source/c74support/msp-includes\"",
+					"$(PROJECT_DIR)/max-sdk/source/c74support/msp-includes",
 				);
 				GCC_PREFIX_HEADER = "$(C74SUPPORT)/max-includes/macho-prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -212,7 +216,7 @@
 					"\"$(C74SUPPORT)/msp-includes\"",
 					"\"$(C74SUPPORT)/jit-includes\"",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/max6-sdk/examples/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/max-sdk/source/Info.plist";
 				INSTALL_PATH = /;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_LDFLAGS = "$(C74_SYM_LINKER_FLAGS)";
