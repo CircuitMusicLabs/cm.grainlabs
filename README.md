@@ -9,6 +9,7 @@ Available controls are the following and consist of an upper and lower range, fr
 * grain length
 * grain pitch
 * pan
+* gain
 
 ###System Requirements for Compiled Externals
 * Mac OS 10.9.5 or above
