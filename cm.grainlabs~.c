@@ -245,12 +245,12 @@ void *cmgrainlabs_new(t_symbol *s, long argc, t_atom *argv) {
 		return NULL;
 	}
     
-    // ALLOCATE MEMORY FOR THE GAIN ARRAY
-    x->gain = (double *)sysmem_newptrclear((MAXGRAINS) * sizeof(double *));
-    if (x->gain == NULL) {
-        object_error((t_object *)x, "out of memory");
-        return NULL;
-    }
+	// ALLOCATE MEMORY FOR THE GAIN ARRAY
+	x->gain = (double *)sysmem_newptrclear((MAXGRAINS) * sizeof(double *));
+	if (x->gain == NULL) {
+		object_error((t_object *)x, "out of memory");
+		return NULL;
+	}
 		
 	/************************************************************************************************************************/
 	// INITIALIZE VALUES
@@ -262,8 +262,8 @@ void *cmgrainlabs_new(t_symbol *s, long argc, t_atom *argv) {
 	x->pitchmax_float = 1.0; // initialize inlet value for min pitch
 	x->panmin_float = 0.0; // initialize value for min pan
 	x->panmax_float = 0.0; // initialize value for max pan
-    x->gainmin_float = 1.0; // initialize value for min gain
-    x->gainmax_float = 1.0; // initialize value for max gain
+	x->gainmin_float = 1.0; // initialize value for min gain
+	x->gainmax_float = 1.0; // initialize value for max gain
 	x->tr_prev = 0.0; // initialize value for previous trigger sample
 	x->grains_count = 0; // initialize the grains count value
 	x->grains_limit_old = 0; // initialize value for the routine when grains limit was modified
@@ -291,8 +291,8 @@ void cmgrainlabs_dsp64(t_cmgrainlabs *x, t_object *dsp64, short *count, double s
 	x->connect_status[5] = count[6]; // 7th inlet: write connection flag into object structure (1 if signal connected)
 	x->connect_status[6] = count[7]; // 8th inlet: write connection flag into object structure (1 if signal connected)
 	x->connect_status[7] = count[8]; // 9th inlet: write connection flag into object structure (1 if signal connected)
-    x->connect_status[8] = count[9]; // 10th inlet: write connection flag into object structure (1 if signal connected)
-    x->connect_status[9] = count[10]; // 11th inlet: write connection flag into object structure (1 if signal connected)
+	x->connect_status[8] = count[9]; // 10th inlet: write connection flag into object structure (1 if signal connected)
+	x->connect_status[9] = count[10]; // 11th inlet: write connection flag into object structure (1 if signal connected)
 	
 	if (x->m_sr != samplerate * 0.001) { // check if sample rate stored in object structure is the same as the current project sample rate
 		x->m_sr = samplerate * 0.001;
@@ -314,7 +314,7 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 	long n = sampleframes; // number of samples per signal vector
 	double tr_curr; // current trigger value
 	double pan; // temporary random pan information
-    double pitch; // temporary pitch for new grains
+	double pitch; // temporary pitch for new grains
 	double distance; // floating point index for reading from buffers
 	long index; // truncated index for reading from buffers
 	double w_read, b_read; // current sample read from the window buffer
