@@ -582,6 +582,7 @@ zero:
 	}
 	buffer_unlocksamples(buffer);
 	buffer_unlocksamples(w_buffer);
+	return; // THIS RETURN WAS MISSING FOR A LONG, LONG TIME. MAYBE THIS HELPS WITH STABILITY!?
 }
 
 
