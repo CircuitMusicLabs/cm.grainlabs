@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		39068FAA1C541B940076DFC3 /* maxmspsdk.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 39068FA91C541B940076DFC3 /* maxmspsdk.xcconfig */; settings = {ASSET_TAGS = (); }; };
 		39068FAC1C541BCC0076DFC3 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39068FAB1C541BCC0076DFC3 /* MaxAudioAPI.framework */; settings = {ASSET_TAGS = (); }; };
+		39560CAD1C5CB60A008663A0 /* cmwindows_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 39560CAC1C5CB60A008663A0 /* cmwindows_functions.c */; settings = {ASSET_TAGS = (); }; };
 		834BB30E19C227C100E135AE /* cm.grainlabs~.c in Sources */ = {isa = PBXBuildFile; fileRef = 834BB30D19C227C100E135AE /* cm.grainlabs~.c */; };
 		83D034781A03FA3C0050D3EF /* cmstereo_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 83D034761A03FA3C0050D3EF /* cmstereo_functions.c */; };
 		83D034791A03FA3C0050D3EF /* cmutil_functions.c in Sources */ = {isa = PBXBuildFile; fileRef = 83D034771A03FA3C0050D3EF /* cmutil_functions.c */; };
@@ -18,6 +19,7 @@
 		2FBBEAE508F335360078DB84 /* cm.grainlabs~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "cm.grainlabs~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		39068FA91C541B940076DFC3 /* maxmspsdk.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = maxmspsdk.xcconfig; path = "max-sdk/source/maxmspsdk.xcconfig"; sourceTree = "<group>"; };
 		39068FAB1C541BCC0076DFC3 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "max-sdk/source/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
+		39560CAC1C5CB60A008663A0 /* cmwindows_functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cmwindows_functions.c; path = cm.library/cmwindows_functions.c; sourceTree = "<group>"; };
 		834BB30D19C227C100E135AE /* cm.grainlabs~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "cm.grainlabs~.c"; sourceTree = "<group>"; };
 		83D034761A03FA3C0050D3EF /* cmstereo_functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cmstereo_functions.c; path = cm.library/cmstereo_functions.c; sourceTree = "<group>"; };
 		83D034771A03FA3C0050D3EF /* cmutil_functions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cmutil_functions.c; path = cm.library/cmutil_functions.c; sourceTree = "<group>"; };
@@ -42,6 +44,7 @@
 				834BB30D19C227C100E135AE /* cm.grainlabs~.c */,
 				83D034761A03FA3C0050D3EF /* cmstereo_functions.c */,
 				83D034771A03FA3C0050D3EF /* cmutil_functions.c */,
+				39560CAC1C5CB60A008663A0 /* cmwindows_functions.c */,
 				39068FAB1C541BCC0076DFC3 /* MaxAudioAPI.framework */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				834BB30E19C227C100E135AE /* cm.grainlabs~.c in Sources */,
+				39560CAD1C5CB60A008663A0 /* cmwindows_functions.c in Sources */,
 				83D034781A03FA3C0050D3EF /* cmstereo_functions.c in Sources */,
 				83D034791A03FA3C0050D3EF /* cmutil_functions.c in Sources */,
 			);

@@ -29,6 +29,7 @@
 #include "ext_obex.h"
 #include "cmstereo.h" // for cm_pan
 #include "cmutil.h" // for cm utility functions
+#include "cmwindows.h" // for windowing function
 #include <stdlib.h> // for arc4random_uniform
 #define MAX_GRAINLENGTH 500 // max grain length in ms
 #define MIN_GRAINLENGTH 1 // min grain length in ms
