@@ -6,18 +6,18 @@
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
-
+ 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
-
+ 
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+ 
  circuit.music.labs@gmail.com
  
-*/
+ */
 
 /************************************************************************************************************************/
 /* INCLUDES                                                                                                             */
@@ -28,14 +28,15 @@
 #include "ext_atomic.h"
 #include "ext_obex.h"
 #include "cmstereo.h" // for cm_pan
-#include "cmutil.h" // for cm_random
+#include "cmutil.h" // for cm utility functions
 #include <stdlib.h> // for arc4random_uniform
-#define MAX_GRAINLENGTH 300 // max grain length in ms
+#define MAX_GRAINLENGTH 500 // max grain length in ms
 #define MIN_GRAINLENGTH 1 // min grain length in ms
-#define MAX_PITCH 10 // max pitch
-#define MAX_GAIN 2.0
-#define ARGUMENTS 3 // constant number of arguments required for the external
+#define MAX_PITCH 10 // min pitch
+#define MAX_GAIN 2.0  // max gain
+#define ARGUMENTS 4 // constant number of arguments required for the external
 #define MAXGRAINS 128 // maximum number of simultaneously playing grains
+#define MIN_WINDOWLENGTH 16 // min window length in samples
 
 
 /************************************************************************************************************************/
@@ -45,8 +46,11 @@ typedef struct _cmgrainlabs {
 	t_pxobject obj;
 	t_symbol *buffer_name; // sample buffer name
 	t_buffer_ref *buffer; // sample buffer reference
-	t_symbol *window_name; // window buffer name
-	t_buffer_ref *w_buffer; // window buffer reference
+	
+	t_symbol *window_type; // window typedef
+	int window_length; // window length
+	short w_writeflag; // checkflag to see if window array is currently re-witten
+	
 	double m_sr; // system millisampling rate (samples per milliseconds = sr * 0.001)
 	double startmin_float; // grain start min value received from float inlet
 	double startmax_float; // grain start max value received from float inlet
@@ -78,6 +82,9 @@ typedef struct _cmgrainlabs {
 	t_atom_long attr_winterp; // attribute: window interpolation on/off
 	t_atom_long attr_sinterp; // attribute: window interpolation on/off
 	t_atom_long attr_zero; // attribute: zero crossing trigger on/off
+	
+	double *window; // window array
+	
 } t_cmgrainlabs;
 
 
@@ -101,10 +108,16 @@ void cmgrainlabs_dblclick(t_cmgrainlabs *x);
 t_max_err cmgrainlabs_notify(t_cmgrainlabs *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 void cmgrainlabs_set(t_cmgrainlabs *x, t_symbol *s, long ac, t_atom *av);
 void cmgrainlabs_limit(t_cmgrainlabs *x, t_symbol *s, long ac, t_atom *av);
+
+void cmgrainlabs_w_type(t_cmgrainlabs *x, t_symbol *s, long ac, t_atom *av);
+void cmgrainlabs_w_length(t_cmgrainlabs *x, t_symbol *s, long ac, t_atom *av);
+
 t_max_err cmgrainlabs_stereo_set(t_cmgrainlabs *x, t_object *attr, long argc, t_atom *argv);
 t_max_err cmgrainlabs_winterp_set(t_cmgrainlabs *x, t_object *attr, long argc, t_atom *argv);
 t_max_err cmgrainlabs_sinterp_set(t_cmgrainlabs *x, t_object *attr, long argc, t_atom *argv);
 t_max_err cmgrainlabs_zero_set(t_cmgrainlabs *x, t_object *attr, long argc, t_atom *argv);
+
+void cmgrainlabs_windowwrite(t_cmgrainlabs *x, t_symbol *s, int length);
 
 
 /************************************************************************************************************************/
@@ -114,13 +127,15 @@ int C74_EXPORT main(void) {
 	// Initialize the class - first argument: VERY important to match the name of the object in the procect settings!!!
 	cmgrainlabs_class = class_new("cm.grainlabs~", (method)cmgrainlabs_new, (method)cmgrainlabs_free, sizeof(t_cmgrainlabs), 0, A_GIMME, 0);
 	
-	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_dsp64, 		"dsp64", 	A_CANT, 0);  // Bind the 64 bit dsp method
-	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_assist, 		"assist", 	A_CANT, 0); // Bind the assist message
-	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_float, 		"float", 	A_FLOAT, 0); // Bind the float message (allowing float input)
-	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_dblclick, 	"dblclick",	A_CANT, 0); // Bind the double click message
-	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_notify, 		"notify", 	A_CANT, 0); // Bind the notify message
-	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_set, 		"set", 		A_GIMME, 0); // Bind the set message for user buffer set
-	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_limit, 		"limit", 	A_GIMME, 0); // Bind the limit message
+	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_dsp64, 		"dsp64", 		A_CANT, 0);  // Bind the 64 bit dsp method
+	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_assist, 		"assist", 		A_CANT, 0); // Bind the assist message
+	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_float, 		"float", 		A_FLOAT, 0); // Bind the float message (allowing float input)
+	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_dblclick, 	"dblclick",		A_CANT, 0); // Bind the double click message
+	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_notify, 		"notify", 		A_CANT, 0); // Bind the notify message
+	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_set, 		"set", 			A_GIMME, 0); // Bind the set message for user buffer set
+	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_limit, 		"limit", 		A_GIMME, 0); // Bind the limit message
+	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_limit, 		"w_type", 		A_GIMME, 0); // Bind the window type message
+	class_addmethod(cmgrainlabs_class, (method)cmgrainlabs_limit, 		"w_length", 	A_GIMME, 0); // Bind the window length message
 	
 	CLASS_ATTR_ATOM_LONG(cmgrainlabs_class, "stereo", 0, t_cmgrainlabs, attr_stereo);
 	CLASS_ATTR_ACCESSORS(cmgrainlabs_class, "stereo", (method)NULL, (method)cmgrainlabs_stereo_set);
@@ -166,13 +181,26 @@ void *cmgrainlabs_new(t_symbol *s, long argc, t_atom *argv) {
 	dsp_setup((t_pxobject *)x, 11); // create 11 inlets
 	
 	if (argc < ARGUMENTS) {
-		object_error((t_object *)x, "%d arguments required (sample/window/voices)", ARGUMENTS);
+		object_error((t_object *)x, "%d arguments required (sample buffer / window type / window length / voices)", ARGUMENTS);
 		return NULL;
 	}
 	
 	x->buffer_name = atom_getsymarg(0, argc, argv); // get user supplied argument for sample buffer
-	x->window_name = atom_getsymarg(1, argc, argv); // get user supplied argument for window buffer
-	x->grains_limit = atom_getintarg(2, argc, argv); // get user supplied argument for maximum grains
+	x->window_type = atom_getsymarg(1, argc, argv); // get user supplied argument for window type
+	x->window_length = atom_getsymarg(2, argc, argv); // get user supplied argument for window length
+	x->grains_limit = atom_getintarg(3, argc, argv); // get user supplied argument for maximum grains
+	
+	// CHECK IF WINDOW TYPE ARGUMENT IS VALID
+	if (x->window_type != gensym("hann") || x->window_type != gensym("rect")) {
+		object_error((t_object *)x, "invalid window type");
+		return NULL;
+	}
+	
+	// CHECK IF WINDOW LENGTH ARGUMENT IS VALID
+	if (x->window_length < MIN_WINDOWLENGTH) {
+		object_error((t_object *)x, "window length must be greater than %d", MIN_WINDOWLENGTH);
+		return NULL;
+	}
 	
 	// HANDLE ATTRIBUTES
 	object_attr_setlong(x, gensym("stereo"), 0); // initialize stereo attribute
@@ -244,14 +272,21 @@ void *cmgrainlabs_new(t_symbol *s, long argc, t_atom *argv) {
 		object_error((t_object *)x, "out of memory");
 		return NULL;
 	}
-    
+	
 	// ALLOCATE MEMORY FOR THE GAIN ARRAY
 	x->gain = (double *)sysmem_newptrclear((MAXGRAINS) * sizeof(double *));
 	if (x->gain == NULL) {
 		object_error((t_object *)x, "out of memory");
 		return NULL;
 	}
-		
+	
+	// ALLOCATE MEMORY FOR THE WINDOW ARRAY
+	x->window = (double *)sysmem_newptrclear((x->window_length) * sizeof(double *));
+	if (x->window == NULL) {
+		object_error((t_object *)x, "out of memory");
+		return NULL;
+	}
+	
 	/************************************************************************************************************************/
 	// INITIALIZE VALUES
 	x->startmin_float = 0.0; // initialize float inlet value for current start min value
@@ -268,12 +303,15 @@ void *cmgrainlabs_new(t_symbol *s, long argc, t_atom *argv) {
 	x->grains_count = 0; // initialize the grains count value
 	x->grains_limit_old = 0; // initialize value for the routine when grains limit was modified
 	x->limit_modified = 0; // initialize channel change flag
-	x->buffer_modified = 0; // initialized buffer modified flag
+	x->buffer_modified = 0; // initialize buffer modified flag
+	x->w_writeflag = 0; // initialize window write flag
 	
 	/************************************************************************************************************************/
 	// BUFFER REFERENCES
 	x->buffer = buffer_ref_new((t_object *)x, x->buffer_name); // write the buffer reference into the object structure
-	x->w_buffer = buffer_ref_new((t_object *)x, x->window_name); // write the window buffer reference into the object structure
+	
+	// WRITE WINDOW INTO WINDOW ARRAY
+	cmgrainlabs_windowwrite(x, x->window_type, x->window_length);
 	
 	return x;
 }
@@ -317,7 +355,7 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 	double pitch; // temporary pitch for new grains
 	double distance; // floating point index for reading from buffers
 	long index; // truncated index for reading from buffers
-	double w_read, b_read; // current sample read from the window buffer
+	double b_read, w_read; // current sample read from the sample buffer and window array
 	double outsample_left = 0.0; // temporary left output sample used for adding up all grain samples
 	double outsample_right = 0.0; // temporary right output sample used for adding up all grain samples
 	int slot = 0; // variable for the current slot in the arrays to write grain info to
@@ -329,28 +367,25 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 	
 	// BUFFER VARIABLE DECLARATIONS
 	t_buffer_obj *buffer = buffer_ref_getobject(x->buffer);
-	t_buffer_obj *w_buffer = buffer_ref_getobject(x->w_buffer);
 	float *b_sample = buffer_locksamples(buffer);
-	float *w_sample = buffer_locksamples(w_buffer);
 	long b_framecount; // number of frames in the sample buffer
-	long w_framecount; // number of frames in the window buffer
 	t_atom_long b_channelcount; // number of channels in the sample buffer
-	t_atom_long w_channelcount; // number of channels in the window buffer
+	
+	float *w_sample = (float *)x->window;
+	
 	
 	// BUFFER CHECKS
 	if (!b_sample) { // if the sample buffer does not exist
 		goto zero;
 	}
-	if (!w_sample) { // if the window buffer does not exist
+	if (x->w_writeflag) { // if the window array is currently being rewritten
 		goto zero;
 	}
-		
+	
 	// GET BUFFER INFORMATION
 	b_framecount = buffer_getframecount(buffer); // get number of frames in the sample buffer
-	w_framecount = buffer_getframecount(w_buffer); // get number of frames in the window buffer
 	b_channelcount = buffer_getchannelcount(buffer); // get number of channels in the sample buffer
-	w_channelcount = buffer_getchannelcount(w_buffer); // get number of channels in the sample buffer
-		
+	
 	// GET INLET VALUES
 	t_double *tr_sigin 	= (t_double *)ins[0]; // get trigger input signal from 1st inlet
 	t_double startmin 	= x->connect_status[0]? *ins[1] * x->m_sr : x->startmin_float * x->m_sr; // get start min input signal from 2nd inlet
@@ -498,7 +533,7 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 			*out_left++ = 0.0;
 			*out_right++ = 0.0;
 		}
-		else if (!w_sample) {
+		else if (x->w_writeflag) {
 			*out_left++ = 0.0;
 			*out_right++ = 0.0;
 		}
@@ -513,11 +548,11 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 				if (x->busy[i]) { // if the current slot contains grain playback information
 					// GET WINDOW SAMPLE FROM WINDOW BUFFER
 					if (x->attr_winterp) {
-						distance = ((double)x->grainpos[i] / (double)x->t_length[i]) * (double)w_framecount;
-						w_read = cm_lininterp(distance, w_sample, w_channelcount, 0);
+						distance = ((double)x->grainpos[i] / (double)x->t_length[i]) * (double)x->window_length;
+						w_read = cm_lininterp(distance, w_sample, 1, 0);
 					}
 					else {
-						index = (long)(((double)x->grainpos[i] / (double)x->t_length[i]) * (double)w_framecount);
+						index = (long)(((double)x->grainpos[i] / (double)x->t_length[i]) * (double)x->window_length);
 						w_read = w_sample[index];
 					}
 					// GET GRAIN SAMPLE FROM SAMPLE BUFFER
@@ -571,7 +606,6 @@ void cmgrainlabs_perform64(t_cmgrainlabs *x, t_object *dsp64, double **ins, long
 	/************************************************************************************************************************/
 	// STORE UPDATED RUNNING VALUES INTO THE OBJECT STRUCTURE
 	buffer_unlocksamples(buffer);
-	buffer_unlocksamples(w_buffer);
 	outlet_int(x->grains_count_out, x->grains_count); // send number of currently playing grains to the outlet
 	return;
 	
@@ -581,7 +615,6 @@ zero:
 		*out_right++ = 0.0;
 	}
 	buffer_unlocksamples(buffer);
-	buffer_unlocksamples(w_buffer);
 	return; // THIS RETURN WAS MISSING FOR A LONG, LONG TIME. MAYBE THIS HELPS WITH STABILITY!?
 }
 
@@ -649,7 +682,8 @@ void cmgrainlabs_assist(t_cmgrainlabs *x, void *b, long msg, long arg, char *dst
 void cmgrainlabs_free(t_cmgrainlabs *x) {
 	dsp_free((t_pxobject *)x); // free memory allocated for the object
 	object_free(x->buffer); // free the buffer reference
-	object_free(x->w_buffer); // free the window buffer reference
+	
+	sysmem_freeptr(x->window); // free memory allocated to the window array
 	
 	sysmem_freeptr(x->busy); // free memory allocated to the busy array
 	sysmem_freeptr(x->grainpos); // free memory allocated to the grainpos array
@@ -769,7 +803,6 @@ void cmgrainlabs_float(t_cmgrainlabs *x, double f) {
 /************************************************************************************************************************/
 void cmgrainlabs_dblclick(t_cmgrainlabs *x) {
 	buffer_view(buffer_ref_getobject(x->buffer));
-	buffer_view(buffer_ref_getobject(x->w_buffer));
 }
 
 
@@ -777,19 +810,10 @@ void cmgrainlabs_dblclick(t_cmgrainlabs *x) {
 /* NOTIFY METHOD FOR THE BUFFER REFERENCES                                                                              */
 /************************************************************************************************************************/
 t_max_err cmgrainlabs_notify(t_cmgrainlabs *x, t_symbol *s, t_symbol *msg, void *sender, void *data) {
-	t_symbol *buffer_name = (t_symbol *)object_method((t_object *)sender, gensym("getname"));
 	if (msg == ps_buffer_modified) {
 		x->buffer_modified = 1;
 	}
-	if (buffer_name == x->window_name) { // check if calling object was the window buffer
-		return buffer_ref_notify(x->w_buffer, s, msg, sender, data); // return with the calling buffer
-	}
-	else if (buffer_name == x->buffer_name) { // check if calling object was the sample buffer
-		return buffer_ref_notify(x->buffer, s, msg, sender, data); // return with the calling buffer
-	}
-	else { // if calling object was none of the expected buffers
-		return MAX_ERR_NONE; // return generic MAX_ERR_NONE
-	}
+	return buffer_ref_notify(x->buffer, s, msg, sender, data); // return with the calling buffer
 }
 
 
@@ -797,23 +821,71 @@ t_max_err cmgrainlabs_notify(t_cmgrainlabs *x, t_symbol *s, t_symbol *msg, void 
 /* THE BUFFER SET METHOD                                                                                                */
 /************************************************************************************************************************/
 void cmgrainlabs_set(t_cmgrainlabs *x, t_symbol *s, long ac, t_atom *av) {
-	if (ac == 2) {
+	if (ac == 1) {
 		x->buffer_modified = 1;
 		x->buffer_name = atom_getsym(av); // write buffer name into object structure
-		x->window_name = atom_getsym(av+1); // write buffer name into object structure
 		buffer_ref_set(x->buffer, x->buffer_name);
-		buffer_ref_set(x->w_buffer, x->window_name);
 		if (buffer_getchannelcount((t_object *)(buffer_ref_getobject(x->buffer))) > 2) {
 			object_error((t_object *)x, "referenced sample buffer has more than 2 channels. using channels 1 and 2.");
 		}
-		if (buffer_getchannelcount((t_object *)(buffer_ref_getobject(x->w_buffer))) > 1) {
-			object_error((t_object *)x, "referenced window buffer has more than 1 channel. expect strange results.");
+	}
+	else {
+		object_error((t_object *)x, "argument required (sample buffer name)");
+	}
+}
+
+
+
+
+
+
+/************************************************************************************************************************/
+/* THE WINDOW TYPE SET METHOD                                                                                           */
+/************************************************************************************************************************/
+void cmgrainlabs_w_type(t_cmgrainlabs *x, t_symbol *s, long ac, t_atom *av) {
+	if (ac == 1) {
+		if (x->w_writeflag == 0) { // only if the window array is not currently being rewritten
+			// CHECK IF WINDOW TYPE ARGUMENT IS VALID
+			if (atom_getsym(av) != gensym("hann") || atom_getsym(av) != gensym("rect")) {
+				object_error((t_object *)x, "invalid window type");
+			}
+			else {
+				x->window_type = atom_getsym(av); // write window type into object structure
+				cmgrainlabs_windowwrite(x, x->window_type, x->window_length); // write window into window array
+			}
 		}
 	}
 	else {
-		object_error((t_object *)x, "%d arguments required (sample/window)", 2);
+		object_error((t_object *)x, "argument required (window type)");
 	}
 }
+
+
+
+/************************************************************************************************************************/
+/* THE WINDOW LENGTH SET METHOD                                                                                         */
+/************************************************************************************************************************/
+void cmgrainlabs_w_length(t_cmgrainlabs *x, t_symbol *s, long ac, t_atom *av) {
+	int arg = atom_getlong(av);
+	if (ac == 1) {
+		// CHECK IF WINDOW LENGTH ARGUMENT IS VALID
+		if (arg < MIN_WINDOWLENGTH) {
+			object_error((t_object *)x, "window length must be greater than %d", MIN_WINDOWLENGTH);
+		}
+		else if (x->w_writeflag == 0) { // only if the window array is not currently being rewritten
+			x->window_length = arg; // write window length into object structure
+			x->w_writeflag = 1;
+			x->window = (double *)sysmem_resizeptrclear(x->window, x->window_length * sizeof(double *)); // resize and clear window array
+			x->w_writeflag = 0;
+			cmgrainlabs_windowwrite(x, x->window_type, x->window_length); // write window into window array
+		}
+	}
+	else {
+		object_error((t_object *)x, "argument required (window length)");
+	}
+}
+
+
 
 
 /************************************************************************************************************************/
@@ -875,4 +947,25 @@ t_max_err cmgrainlabs_zero_set(t_cmgrainlabs *x, t_object *attr, long ac, t_atom
 	}
 	return MAX_ERR_NONE;
 }
+
+/************************************************************************************************************************/
+/* THE WINDOW_WRITE FUNCTION                                                                                            */
+/************************************************************************************************************************/
+void cmgrainlabs_windowwrite(t_cmgrainlabs *x, t_symbol *type, int length) {
+	x->w_writeflag = 1;
+	if (type == gensym("hann")) {
+		cm_hann(x->window, length);
+	}
+	else if (type == gensym("rect")) {
+		cm_rectangular(x->window, length);
+	}
+	x->w_writeflag = 0;
+	return;
+}
+
+
+
+
+
+
 
