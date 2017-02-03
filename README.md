@@ -1,3 +1,5 @@
+![deprecated](http://circuitmusiclabs.com/img/deprecated.png)
+
 #cm.grainlabs~
 **by Matthias W. Müller - [@mwmueller](https://twitter.com/mwmueller) - [cmlabs.wordpress.com](https://cmlabs.wordpress.com/)**
 
