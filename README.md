@@ -1,5 +1,7 @@
 ![deprecated](http://circuitmusiclabs.com/img/deprecated.png)
 
+Repository replaced by [petra package](https://github.com/CircuitMusicLabs/petra).
+
 #cm.grainlabs~
 **by Matthias W. Müller - [@mwmueller](https://twitter.com/mwmueller) - [cmlabs.wordpress.com](https://cmlabs.wordpress.com/)**
 
